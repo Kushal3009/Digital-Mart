@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/8016dd23c8.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <title>Digital Mart</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-img-top {
+      width: 220px;
+      height: 200px;
+      justify-content: center;
+      padding: 3px;
+
+    }
+
+    .h-1 {
+      height: 30px;
+    }
+
+    .overflow-text {
+      text-overflow: ellipsis;
+
+    }
+
+    .background {
+      background-color: rgb(219, 234, 248);
+    }
+
+    .page-link {
+      transform: scale(1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .page-link:hover {
+      transform: scale(1.2);
+      border: 1px solid black;
+    }
+
+    .h-100 {
+      width: 60%;
+    }
+
+    .bg-dark {
+      background-color: black;
+      opacity: 0.7;
+    }
+
+    .btn-outline-dark {
+      opacity: 0.7;
+    }
+
+    img {
+      transform: scale(1);
+      transition: transform 0.5s ease-in-out;
+    }
+
+    img:hover {
+      overflow: hidden;
+      transform: scale(1.2);
+    }
+
+    .container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      display: flex;
+    }
+
+    img {
+      width: 50px;
+      height: 100px;
+    }
+
+    .container-fluid {
+      padding-top: 10px;
+      background-color: azure;
+      height: 80vh;
+
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand font-weight-bold" style="font-weight: 500;" href="/">DigitalMart</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <div class="suggestions-wrapper">
+              <form class="d-flex" id="searchForm" method="get" action="/api/products">
+                <input class="form-control me-2" type="text" id="searchInput" name="searchTerm"
+                  placeholder="Search for products">
+                <button class="btn btn-outline-light" type="submit">Search</button> <!-- Add a submit button -->
+              </form>
+            </div>
+          </li>
+          <% if (loggedIn) { %>
+            <!-- Show logout link when logged in -->
+            <li class="nav-item">
+              <a class="nav-link font-weight-bold" href="/logout">Logout</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link font-weight-bold" href="/cart">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link font-weight-bold" href="/">Profile</a>
+            </li>
+            <% } else { %>
+              <!-- Show login links when not logged in -->
+              <li class="nav-item">
+                <a class="nav-link" href="/seller_login">Seller Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user_login">User Login</a>
+              </li>
+              <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <div style="background-color: azure; height:100%">
+    <div class="container-fluid d-flex justify-content-center m-0 flex-wrap">
+      <% products.forEach((product)=> { %>
+        <div class="card d-inline-flex flex-row align-items-center mx-1"
+          style="height: 180px; width:350px; box-shadow:1px 0 4px 0 black">
+          <div class="d-flex align-items-center p-3 w-50">
+            <img style="width:300px;" src="<%=product.product_image%>" alt="">
+          </div>
+          <div class="d-flex align-item-center flex-column justify-content-evenly w-100 h-75">
+            <h5 class="card-title h-1 w-100 overflow-text m-0"
+              style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">
+              <%= product.product_name %>
+            </h5>
+            <p class="card-text fs-6 inline m-0">Price: $<%= product.product_price.toFixed(2) %>
+            </p>
+            <div class="fs-6">
+              <span class="badge bg-dark mb-2">
+                <%= product.product_rating %><span class="fa fa-star"></span>
+              </span>
+              <span class="badge bg-dark">
+                <%= product.product_total_ratings %>
+              </span>
+            </div>
+            <div class="fs-6">
+              <a href="/product_details/<%= product.product_id %>">
+                <button class="btn btn-outline-dark">View</button>
+              </a>
+              <button class="btn btn-outline-dark add-to-cart" data-product-id="<%= product.product_id %>">Add
+                Cart</button>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+    </div>
+    <!-- Pagination -->
+    <!-- Pagination -->
+    <nav>
+      <ul class="pagination justify-content-center">
+        <% for (let i=1; i <=totalPages; i++) { %>
+          <li class="page-item mx-2 <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link text-dark bg-light" href="/?page=<%= i %>">
+              <%= i %>
+            </a>
+          </li>
+          <% } %>
+      </ul>
+    </nav>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Listen to click events on Add to Cart buttons
+      document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', async function () {
+          const productId = this.getAttribute('data-product-id');
+          try {
+            const response = await fetch(`/add_cart/${productId}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              // You can add credentials: 'include' if you want to include cookies in the request
+            });
+  
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+  
+            // Parse JSON response
+            const data = await response.json();
+  
+            // Display alert after successful addition
+            alert(data.message);
+          } catch (error) {
+            console.error('Error adding product to cart:', error);
+            // Handle error as needed
+          }
+        });
+      });
+    });
+  </script>
+  
+
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchForm = document.getElementById('searchForm');
+      const productContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
+      const paginationContainer = document.querySelector('.pagination');
+
+      searchForm.addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        const searchTerm = document.getElementById('searchInput').value.trim(); // Trim whitespace
+
+        try {
+          let url;
+          if (searchTerm) {
+            url = `/api/products?searchTerm=${searchTerm}`;
+          } else {
+            url = '/api/products'; // Fetch all products if search term is empty
+          }
+
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const responseData = await response.json();
+
+          // Render products and pagination
+          renderProducts(responseData.products);
+          renderPagination(responseData.totalPages, responseData.currentPage);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+
+      // Function to render products
+      function renderProducts(products) {
+        // Clear existing product cards
+        productContainer.innerHTML = '';
+
+        // Iterate over each product and create a card
+        products.forEach(product => {
+          // Create card elements
+          const card = document.createElement('div');
+          card.classList.add('col');
+          card.innerHTML = `
+            <div class="card h-100">
+              <img src="${product.product_image}" class="card-img-top" alt="Product Image">
+              <div class="card-body">
+                <h5 class="card-title">${product.product_name}</h5>
+                <p class="card-text">Price: $${product.product_price.toFixed(2)}</p>
+                <p class="card-text">Rating: <span class="badge bg-primary">${product.product_rating}</span></p>
+              </div>
+              <div class="card-body">
+                <button href="#" class="btn btn-outline-primary">Add to Cart</button>
+              </div>
+            </div>
+          `;
+
+          // Append card to the product container
+          productContainer.appendChild(card);
+        });
+      }
+
+      // Function to render pagination
+      function renderPagination(totalPages, currentPage) {
+        paginationContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+          const li = document.createElement('li');
+          li.classList.add('page-item');
+          if (i === currentPage) {
+            li.classList.add('active');
+          }
+
+          const link = document.createElement('a');
+          link.classList.add('page-link');
+          link.href = `/?page=${i}`;
+          link.textContent = i;
+
+          li.appendChild(link);
+          paginationContainer.appendChild(li);
+        }
+      }
+
+      document.querySelectorAll('.view-product').forEach(button => {
+        button.addEventListener('click', function (event) {
+          event.preventDefault(); // Prevent default button behavior (form submission or link click)
+
+          // Extract product ID from the button's data attribute
+          const productId = this.getAttribute('data-product-id');
+
+          // Fetch product details using AJAX
+          fetch(`/product_details/${productId}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(productDetails => {
+              // Handle the response (product details)
+              console.log(productDetails); // Here, you can update the UI to display the product details
+            })
+            .catch(error => {
+              console.error('Error fetching product details:', error);
+            });
+        });
+      });
+    });
+
+  </script> -->
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
