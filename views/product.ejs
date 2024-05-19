@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitalMart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <style>
+    .navbar-nav .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    /* Adjust dropdown position */
+    .dropdown-menu {
+      margin-top: 0;
+    }
+
+    /* Prevent dropdown from closing on hover */
+    .dropdown-menu:hover {
+      display: block;
+    }
+
+    .contact-info .bi {
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .contact-info a {
+      color: white;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/your-kit-code.js"></script>
+</head>
+
+<body>
+
+
+  <head>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 sticky-top">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="/" style="font-weight: 500;">DigitalMart</a>
+        <!-- Toggle Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Collapsible Content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Search Bar -->
+          <form class="form-inline my-0 my-lg-0 mx-auto d-none d-md-flex align-item-center justify-content-center w-50"
+            method="post" action="/searchProducts">
+            <input class="form-control mr-2 mx-2" type="search" placeholder="Search Product..." aria-label="Search"
+              name="searchTerm"> <!-- Ensure name="searchTerm" -->
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+          </form>
+
+          <!-- Cart, Login, and Sign Up -->
+          <ul class="navbar-nav ml-auto" style="margin-right: 30px;">
+            <% if (loggedIn) { %>
+              <!-- Show user name and links when logged in -->
+              <li class="nav-item" style="margin-right: 5px;">
+                <a class="nav-link text-light hover:text-secondary" href="#">
+                  <%= userName %>
+                </a>
+              </li>
+              <% if(userType=='buyer' ) { %>
+                <li class="nav-item" style="margin-right: 5px; position: relative;">
+                  <a class="nav-link text-light hover:text-secondary" href="/cart">
+                    <i class="fa-solid fa-cart-shopping fs-4"></i>
+                    <span id="cartItemCount" class="badge bg-dark"
+                      style="position: absolute; top: 0; right:1px; font-size:0.8rem;">
+                      <%= cartCount %>
+                    </span>
+                  </a>
+                </li>
+
+
+                <li class="nav-item" style="margin-right: 5px;">
+                  <a class="nav-link text-light hover:text-secondary" href="/orders"><i
+                      class="fas fa-shopping-bag fs-4 fa-shack mx-2"></i></a>
+                </li>
+                <% } else { %>
+                  <li class="nav-item" style="margin-right: 5px;">
+                    <a class="nav-link text-light hover:text-secondary" href="/addProduct">Add Product</a>
+                  </li>
+                  <li class="nav-item" style="margin-right: 5px;">
+                    <a class="nav-link text-light hover:text-secondary" href="/api/allOrders">All Orders</a>
+                  </li>
+                  <% } %>
+                    <li class="nav-item">
+                      <a class="nav-link text-light hover:text-secondary" href="/logout"><i
+                          class="fa-solid fa-right-from-bracket fs-4"></i></a>
+                    </li>
+                    <% } else { %>
+                      <!-- Show login and sign up links when not logged in -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#userLoginModal">User
+                          Login</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#sellerLoginModal">Seller
+                          Login</a>
+                      </li>
+                      <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-lg-none d-md-none">
+      <form class="form-inline my-0 my-lg-0 mx-auto align-item-center justify-content-center w-100 px-3">
+        <div class="input-group">
+          <input class="form-control mr-2" type="search" placeholder="Search Product..." aria-label="Search">
+          <button class="btn btn-outline-light" id="searchProduct" type="submit">Search</button>
+        </div>
+      </form>
+    </nav>
+
+    <div class="modal fade" id="userLoginModal" tabindex="-1" aria-labelledby="userLoginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userLoginModalLabel">Welcome to User Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <!-- Login form fields -->
+              <div class="mb-3">
+                <label for="buyer_email" class="form-label">Email</label>
+                <input type="text" id="buyer_email" name="buyer_email" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="buyer_password" class="form-label">Password</label>
+                <input type="password" id="buyer_password" name="buyer_password" class="form-control">
+              </div>
+              <!-- Forgot password link -->
+              <div class="mb-3">
+                <a href="/forgotPassword" class="text-decoration-none">Forgot password?</a>
+              </div>
+              <!-- Sign in button -->
+              <div class="mb-3">
+                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <p class="text-secondary">Don't have an account? <a href="/user_registration"
+                  class="text-decoration-none">Sign up</a></p>
+            </div>
+            <div id="alertContainer"
+              class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-dismissible"
+              style="z-index: 1050; display: none; max-height: 90px; display:flex; justify-content:center;">
+              <div id="alertMessage" class="alert text-center" role="alert"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Seller Login Modal -->
+    <div class="modal fade" id="sellerLoginModal" tabindex="-1" aria-labelledby="sellerLoginModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sellerLoginModalLabel">Welcome to Seller Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="sellerForm">
+              <!-- Login form fields -->
+              <div class="mb-3">
+                <label for="seller_email" class="form-label">Email</label>
+                <input type="text" id="seller_email" name="seller_email" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="seller_password" class="form-label">Password</label>
+                <input type="password" id="seller_password" name="seller_password" class="form-control">
+              </div>
+              <!-- Forgot password link -->
+              <div class="mb-3">
+                <a href="/forgotPassword" class="text-decoration-none">Forgot password?</a>
+              </div>
+              <!-- Sign in button -->
+              <div class="mb-3">
+                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <p class="text-secondary">Don't have an account? <a href="/seller_registration"
+                  class="text-decoration-none">Sign up</a></p>
+            </div>
+            <div id="alertContainer2"
+              class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-dismissible"
+              style="z-index: 1050; display: none; max-height: 90px; display:flex; justify-content:center;">
+              <div id="alertMessage2" class="alert text-center" role="alert"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </head>
+  <div style="display: flex; align-items:center; justify-content:center">
+    <div id="loginAlert" class="text-center alert alert-danger mt-3 w-25" role="alert" style="display: none;">
+      Please Login to Buy Product
+    </div>
+  </div>
+
+
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-6 d-flex align-item-center justify-content-center">
+        <% if (product.product_image.startsWith('http')) { %>
+          <img alt="ecommerce" class="img-fluid rounded p-3" src="<%= product.product_image %>">
+          <% } else{ %>
+            <img alt="ecommerce" class="img-fluid rounded p-3" src="/public/images/<%=product.product_image%>">
+            <% } %>
+      </div>
+      <div class="col-lg-6">
+        <h2 class="text-muted">
+          <%= product.brand_name %>
+        </h2>
+        <h1 class="text-dark">
+          <%= product.product_name %>
+        </h1>
+        <div class="mb-3">
+          <% for (let i=0; i < product.product_rating; i++) { %>
+            <i class="fas fa-star text-warning"></i>
+            <% } %>
+              <% for (let i=product.product_rating; i < 5; i++) { %>
+                <i class="far fa-star text-warning"></i>
+                <% } %>
+                  <span class="text-muted ml-2">
+                    <%= product.product_rating %> Reviews (<%= product.product_total_ratings %>)
+                  </span>
+        </div>
+        <p class="text-muted">
+          <%= product.product_details %>
+        </p>
+        <div class="mb-3">
+          <p class="text-dark fs-3" style="font-weight: bold;">Price: &#8377;<%= product.discount_price %> <span
+                style="text-decoration: line-through; font-weight:500;">&#8377;<%= product.product_price %></span><span
+                style="color: green;" class="fs-5">
+                <%= product.product_discount %>%
+              </span>
+          </p>
+        </div>
+        <% if(userType=="seller" ){ %>
+          <div class="mb-3">
+            <h3 class="text-dark">Available Stock: <%= product.product_stock %>
+            </h3>
+          </div>
+          <% } %>
+            <% if(userType=="buyer" || userType==undefined ){ %>
+              <div class="mb-3">
+                <input type="number" class="form-control w-25 d-inline-block" name="quantity" value="1" min="1"
+                  onchange="validateQuantity()">
+                <button class="btn btn-primary ms-2 add-to-cart" data-product-id="<%= product.product_id %>">ADD
+                  CART</button>
+                <form id="orderForm" class="d-inline-block">
+                  <button type="button" id="buyButton" class="btn btn-success ms-2">BUY</button>
+                  <input type="hidden" id="product_id" name="product_id" value="<%= product.product_id %>">
+                </form>
+              </div>
+              <%} else { %>
+                <div class="mb-3">
+                  <a href="/editProduct/<%= product.product_id %>">
+                    <button class="btn btn-primary">EDIT PRODUCT</button>
+                  </a>
+                  <a href="/delete_product/<%= product.product_id %>">
+                    <button class="btn btn-primary">DELETE PRODUCT</button>
+                  </a>
+                </div>
+                <% } %>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="bg-dark text-light mt-5">
+    <div class="container">
+      <footer class="py-5">
+        <div class="row">
+          <div class="col-6 col-md-2 mb-3">
+            <h5>Section</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Home</a></li>
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Features</a></li>
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">Pricing</a></li>
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">FAQs</a></li>
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light">About</a></li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-2 mb-3">
+            <h5>Brands</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Samsung" class="nav-link p-0 text-light">Samsung</a>
+              </li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Apple" class="nav-link p-0 text-light">Apple</a>
+              </li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Mi" class="nav-link p-0 text-light">Mi</a></li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Noise" class="nav-link p-0 text-light">Noise</a>
+              </li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Canon" class="nav-link p-0 text-light">Canon</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-2 mb-3">
+            <h5>category</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="/category?category_name=Smart Phones"
+                  class="nav-link p-0 text-light">Smart Phones</a></li>
+              <li class="nav-item mb-2"><a href="/category?category_name=Smart Watch"
+                  class="nav-link p-0 text-light">Smart Watch</a></li>
+              <li class="nav-item mb-2"><a href="/category?category_name=Laptop"
+                  class="nav-link p-0 text-light">Laptop</a></li>
+              <li class="nav-item mb-2"><a href="/category?category_name=Speaker"
+                  class="nav-link p-0 text-light">Speaker</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-5 offset-md-1 mb-3">
+            <div class=" bg-dark">
+              <h5 class="mb-3">Contact Us</h5>
+              <p>Reach out to us through the following:</p>
+              <ul class="list-unstyled">
+                <li class="mb-2">
+                  <i class="bi bi-envelope-fill me-2"></i>
+                  <strong>Email:</strong>
+                  <a href="mailto:kushalpadhiyar030@gmail.com"
+                    class="text-decoration-none text-light">kushalpadhiyar030@gmail.com</a>
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-telephone-fill me-2"></i>
+                  <strong>Phone:</strong>
+                  <a href="tel:+17802043261" class="text-decoration-none text-light">780-204-3261</a>
+                </li>
+                <li>
+                  <i class="bi bi-instagram me-2"></i>
+                  <strong>Instagram:</strong>
+                  <a href="https://instagram.com/yourinstagram" target="_blank" class="text-decoration-none text-light">Follow us
+                    on Instagram</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+          <p>© 2024 Company, Inc. All rights reserved.</p>
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3"><a class="link-light" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#twitter"></use>
+                </svg></a></li>
+            <li class="ms-3"><a class="link-light" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#instagram"></use>
+                </svg></a></li>
+            <li class="ms-3"><a class="link-light" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#facebook"></use>
+                </svg></a></li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+  </footer>
+
+  <div id="alertContainer3" class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-dismissible"
+    style="z-index: 1050; display: none; max-height: 90px; display:flex; justify-content:center;">
+    <div id="alertMessage3" class="alert text-center" role="alert"></div>
+  </div>
+
+  <script src="https://kit.fontawesome.com/8016dd23c8.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.add-to-cart').on('click', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var productId = $(this).data('product-id');
+        var quantity = $(this).closest('.mb-3').find('input[name="quantity"]').val();
+        const alertContainer3 = $('#alertContainer3'); // Using jQuery to select alertContainer3
+        const alertMessage3 = $('#alertMessage3'); // Using jQuery to select alertMessage3
+
+        // AJAX request to add to cart
+        $.ajax({
+          url: `/add_cart/${productId}?quantity=${quantity}`,
+          type: 'GET',
+          success: function (data) {
+            alertMessage3.text(data.message); // Assuming data.message contains the success message
+            alertContainer3.removeClass('alert-danger').addClass('alert-success').slideDown();
+
+            // Hide the alert container after 2 seconds
+            setTimeout(function () {
+              alertContainer3.slideUp();
+            }, 1000);
+
+            // Reload the current page after displaying the message
+            setTimeout(function () {
+              location.reload();
+            }, 1500); // Reload after 2.2 seconds (0.2s after hiding the alert)
+          },
+          error: function (error) {
+            console.error('Error adding product to cart:', error);
+            alert('Error adding product to cart. Please try again later.');
+          }
+        });
+      });
+    });
+
+
+
+
+    $('#buyButton').on('click', function () {
+      var userType = '<%= userType %>'; // Get user type from your server-side code
+
+      if (userType !== 'buyer') {
+        // Show the alert
+        $('#loginAlert').slideDown();
+
+        // Hide the alert after 2 seconds
+        setTimeout(function () {
+          $('#loginAlert').slideUp();
+        }, 2000);
+      } else {
+        var quantity = $('input[name="quantity"]').val();
+        var productId = $('#product_id').val();
+        window.location.href = `/address/product_page/${productId}/${quantity}`;
+      }
+    });
+
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('loginForm');
+      const alertContainer = document.getElementById('alertContainer');
+      const alertMessage = document.getElementById('alertMessage');
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const buyerEmail = document.getElementById('buyer_email').value;
+        const buyerPassword = document.getElementById('buyer_password').value;
+
+        // Create an object to hold form data
+        const formData = {
+          buyer_email: buyerEmail,
+          buyer_password: buyerPassword
+        };
+
+        // Convert form data to URL-encoded format
+        const urlEncodedData = new URLSearchParams(formData).toString();
+
+        // Make an API call to submit form data
+        fetch('/api/buyer_login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: urlEncodedData
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              showAlert(data.error, 'danger');
+            } else {
+              console.log('coming')
+              window.location.href = '/';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showAlert('An error occurred. Please try again.', 'danger');
+          });
+      });
+
+      function showAlert(message, type) {
+        alertMessage.textContent = message;
+        console.log(type);
+
+        // Remove both alert classes first
+        alertContainer.classList.remove('alert-danger', 'alert-success');
+
+        // Set the alert type based on the parameter
+        if (type === 'success') {
+          alertContainer.classList.add('alert-success');
+          console.log('alert successfully');
+        } else {
+          alertContainer.classList.add('alert-danger');
+          console.log('alert not successfully');
+        }
+
+        // Use jQuery to slideDown the alert
+        $(alertContainer).slideDown();
+
+        // Slide up the alert after 2 seconds
+        setTimeout(() => {
+          $(alertContainer).slideUp();
+        }, 2000);
+      }
+
+    });
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('sellerForm');
+      const alertContainer2 = document.getElementById('alertContainer2');
+      const alertMessage2 = document.getElementById('alertMessage2');
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const sellerEmail = document.getElementById('seller_email').value;
+        const sellerPassword = document.getElementById('seller_password').value;
+
+        // Create an object to hold form data
+        const formData = {
+          seller_email: sellerEmail,
+          seller_password: sellerPassword
+        };
+
+        // Convert form data to URL-encoded format
+        const urlEncodedData = new URLSearchParams(formData).toString();
+
+        // Make an API call to submit form data
+        fetch('/api/seller_login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: urlEncodedData
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              showAlert2(data.error, 'danger');
+            } else {
+              window.location.href = '/';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showAlert('An error occurred. Please try again.', 'danger');
+          });
+      });
+
+      function showAlert2(message, type) {
+        alertMessage2.textContent = message;
+        console.log(type);
+
+        // Remove both alert classes first
+        alertContainer2.classList.remove('alert-danger', 'alert-success');
+
+        // Set the alert type based on the parameter
+        if (type === 'success') {
+          alertContainer2.classList.add('alert-success');
+          console.log('alert successfully');
+        } else {
+          alertContainer2.classList.add('alert-danger');
+          console.log('alert not successfully');
+        }
+
+        // Use jQuery to slideDown the alert
+        $(alertContainer2).slideDown();
+
+        // Slide up the alert after 2 seconds
+        setTimeout(() => {
+          $(alertContainer2).slideUp();
+        }, 2000);
+      }
+
+    });
+
+
+    function validateQuantity() {
+      const quantityInput = document.querySelector('input[name="quantity"]');
+      const quantityValue = quantityInput.value.trim(); // Remove leading and trailing whitespace
+
+      // Check if the input contains only digits
+      if (/^\d+$/.test(quantityValue)) {
+        // Convert the input value to an integer
+        const intValue = parseInt(quantityValue);
+
+        // Check for negative or zero quantity
+        if (intValue <= 0) {
+          quantityInput.value = 1; // Reset the value to 1
+          displayAlert("Invalid input. Please enter a valid Quantity.");
+        } else {
+          hideAlert(); // Hide the alert container if quantity is valid
+        }
+      } else {
+        // If the input contains non-numeric characters, reset to 1
+        quantityInput.value = 1;
+        displayAlert("Invalid input. Please enter a valid Quantity.");
+      }
+    }
+
+    function displayAlert(message) {
+      $('#loginAlert').text(message).slideDown();
+      setTimeout(() => {
+        $('#loginAlert').slideUp();
+      }, 2000);
+    }
+
+    function hideAlert() {
+      $('#loginAlert').slideUp();
+    }
+
+
+
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+</body>
+
+</html>

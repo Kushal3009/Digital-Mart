@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DigitalMart - Your Online Shopping Destination</title>
+  <meta name="description" content="DigitalMart offers a wide range of products from top brands at affordable prices. Shop now for the best deals on smartphones, laptops, smartwatches, and more.">
+  <meta name="keywords" content="DigitalMart, online shopping, smartphones, laptops, smartwatches, top brands">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/8016dd23c8.js" crossorigin="anonymous"></script>
+
+  <style>
+    /*card css*/
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .custom-card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px 0px 10px 0px;
+    }
+
+    
+    .custom-card {
+      width: 300px;
+      background-color: #fff;
+      border-radius: 10px;  
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      /* Inherit link color */
+    }
+
+    .custom-card:hover {
+      box-shadow: 0 0 8px 16px rgba(0, 0, 0, 0.1);
+      /* Add hover effect */
+    }
+
+    .custom-card img {
+      width: 100%;
+      height: auto;
+      /* Set height to auto for responsive images */
+      object-fit: contain;
+      padding: 5px 2px 0px 2px;
+      transform: scale(0.8);
+    }
+
+    .custom-card img {
+      transition: transform 0.3s ease;
+    }
+
+    .custom-card img:hover {
+      transform: scale(0.85);
+    }
+
+
+    .custom-card-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .custom-card-title {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      text-align: center;
+      height: 40px;
+      /* Fixed height for card title */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-card-price {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .custom-card-discount {
+      font-size: 0.9rem;
+      color: #00a000;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .custom-card-rating {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-card-rating .stars {
+      color: #fdd835;
+      /* Material yellow */
+      margin-right: 5px;
+    }
+
+    .custom-card-total-ratings {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 600px) {
+      .custom-card {
+        width: calc(50% - 20px);
+      }
+
+      .custom-card img {
+        height: 150px;
+        /* Adjust the height for smaller screens */
+      }
+    }
+
+    @media (min-width: 601px) {
+      .custom-card img {
+        height: 200px;
+        /* Adjust the height for larger screens */
+      }
+    }
+
+    .brands-card {
+      background-color: white;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .brands-card>a {
+      background-color: white;
+      width: 190px;
+      /* Three items per row with some spacing */
+      margin: 10px;
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .brands-card img {
+      max-width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .brands-card img:hover {
+      transform: scale(1.056);
+    }
+
+    @media screen and (max-width: 768px) {
+      .brands-card>a {
+        width: calc(50% - 20px);
+        /* Two items per row with some spacing */
+      }
+
+      .brands-card {
+        justify-content: flex-start;
+        /* Align items to start for smaller screens */
+      }
+    }
+
+
+
+    .brand-card {
+      display: inline-block;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      /* Increasing shadow on hover */
+      transition: box-shadow 0.3s ease-in-out;
+      /* Adding transition for smooth hover effect */
+    }
+
+    .brand-card:hover {
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      /* Increasing shadow on hover */
+    }
+
+
+    @media (max-width: 768px) {
+      #cartItemCount {
+        right: 5px;
+        /* Adjust the right position for smaller screens */
+      }
+    }
+
+    .btn-outline-dark:hover .text-dark {
+      color: white !important;
+  }
+  
+  </style>
+
+</head>
+
+<body>
+
+  <head>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 sticky-top">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="/" style="font-weight: 500;">DigitalMart</a>
+        <!-- Toggle Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Collapsible Content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Search Bar -->
+          <form class="form-inline my-0 my-lg-0 mx-auto d-none d-md-flex align-item-center justify-content-center w-50"
+            method="post" action="/searchProducts">
+            <input class="form-control mr-2 mx-2" type="search" placeholder="Search Product..." aria-label="Search"
+              name="searchTerm"> <!-- Ensure name="searchTerm" -->
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+          </form>
+
+          <!-- Cart, Login, and Sign Up -->
+          <ul class="navbar-nav ml-auto" style="margin-right: 30px;">
+            <% if (loggedIn) { %>
+              <!-- Show user name and links when logged in -->
+              <li class="nav-item" style="margin-right: 5px;">
+                <a class="nav-link text-light hover:text-secondary" href="#">
+                  <%= userName %>
+                </a>
+              </li>
+              <% if(userType=='buyer' ) { %>
+                <li class="nav-item" style="margin-right: 5px; position: relative;">
+                  <a class="nav-link text-light hover:text-secondary" href="/cart">
+                    <i class="fa-solid fa-cart-shopping fs-4"></i>
+                    <span id="cartItemCount" class="badge bg-dark"
+                      style="position: absolute; top: 0; right:1px; font-size:0.8rem;">
+                      <%= cartCount %>
+                    </span>
+                  </a>
+                </li>
+
+
+                <li class="nav-item" style="margin-right: 5px;">
+                  <a class="nav-link text-light hover:text-secondary" href="/orders"><i
+                      class="fas fa-shopping-bag fs-4 fa-shack mx-2"></i></a>
+                </li>
+                <% } else { %>
+                  <li class="nav-item" style="margin-right: 5px;">
+                    <a class="nav-link text-light hover:text-secondary" href="/addProduct">Add Product</a>
+                  </li>
+                  <% } %>
+                    <li class="nav-item">
+                      <a class="nav-link text-light hover:text-secondary" href="/logout"><i
+                          class="fa-solid fa-right-from-bracket fs-4"></i></a>
+                    </li>
+                    <% } else { %>
+                      <!-- Show login and sign up links when not logged in -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#userLoginModal">User
+                          Login</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#sellerLoginModal">Seller
+                          Login</a>
+                      </li>
+                      <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-lg-none d-md-none">
+      <form class="form-inline my-0 my-lg-0 mx-auto align-item-center justify-content-center w-100 px-3">
+        <div class="input-group">
+          <input class="form-control mr-2" type="search" placeholder="Search Product..." aria-label="Search">
+          <button class="btn btn-outline-light" id="searchProduct" type="submit">Search</button>
+        </div>
+      </form>
+    </nav>
+
+    <div class="modal fade" id="userLoginModal" tabindex="-1" aria-labelledby="userLoginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userLoginModalLabel">Welcome to User Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <!-- Login form fields -->
+              <div class="mb-3">
+                <label for="buyer_email" class="form-label">Email</label>
+                <input type="text" id="buyer_email" name="buyer_email" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="buyer_password" class="form-label">Password</label>
+                <input type="password" id="buyer_password" name="buyer_password" class="form-control">
+              </div>
+              <!-- Forgot password link -->
+              <div class="mb-3">
+                <a href="/forgotPassword" class="text-decoration-none">Forgot password?</a>
+              </div>
+              <!-- Sign in button -->
+              <div class="mb-3">
+                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <p class="text-secondary">Don't have an account? <a href="/user_registration"
+                  class="text-decoration-none">Sign up</a></p>
+            </div>
+            <div id="alertContainer"
+              class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-dismissible"
+              style="z-index: 1050; display: none; max-height: 90px; display:flex; justify-content:center;">
+              <div id="alertMessage" class="alert text-center" role="alert"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Seller Login Modal -->
+    <div class="modal fade" id="sellerLoginModal" tabindex="-1" aria-labelledby="sellerLoginModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sellerLoginModalLabel">Welcome to Seller Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="sellerForm">
+              <!-- Login form fields -->
+              <div class="mb-3">
+                <label for="seller_email" class="form-label">Email</label>
+                <input type="text" id="seller_email" name="seller_email" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="seller_password" class="form-label">Password</label>
+                <input type="password" id="seller_password" name="seller_password" class="form-control">
+              </div>
+              <!-- Forgot password link -->
+              <div class="mb-3">
+                <a href="/forgotPassword" class="text-decoration-none">Forgot password?</a>
+              </div>
+              <!-- Sign in button -->
+              <div class="mb-3">
+                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <p class="text-secondary">Don't have an account? <a href="/seller_registration"
+                  class="text-decoration-none">Sign up</a></p>
+            </div>
+            <div id="alertContainer2"
+              class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-dismissible"
+              style="z-index: 1050; display: none; max-height: 90px; display:flex; justify-content:center;">
+              <div id="alertMessage2" class="alert text-center" role="alert"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </head>
+
+  <main>
+    <!-- carousel -->
+    <div id="carouselExample" class="carousel slide h-75" data-bs-ride="carousel" data-interval="2000">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../public/carousal/img1.webp" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../public/carousal/img2.webp" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../public/carousal/img3.webp" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+
+    <!-- Top Deals  -->
+    <div class="container my-3 py-2" style="background-color: white; border-radius:10px">
+      <div class="d-flex justify-content-between">
+        <h3>Best Sell Product</h3>
+        <button class="mt-1 btn btn-outline-dark"><a class="text-decoration-none p-1 rounded-2 text-dark"
+            href="/allProducts">See All</a></button>
+      </div>
+      <div class="custom-card-container">
+        <% products.forEach(product=> { %>
+          <a href="/product_details/<%= product.product_id %>" class="custom-card">
+            <% if (product.product_image.startsWith('http')) { %>
+              <img src="<%= product.product_image%>" alt="">
+              <% } else{ %>
+                <img src="public/images/<%= product.product_image%>" alt="">
+                <% } %>
+                  <div class="custom-card-content">
+                    <h2 class="custom-card-title">
+                      <%= product.product_name %>
+                    </h2>
+                    <p class="custom-card-price">&#8377;<%= product.discount_price %> <span class="text-decoration-line-through"><%= product.product_price %></span></p>
+                    <p class="custom-card-discount">Discount: <%= product.product_discount %>%</p>
+                    <div class="custom-card-rating">
+                      <% for (let i=0; i < product.product_rating; i++) { %>
+                        <span class="stars">&#9733;</span>
+                        <% } %>
+                          <span class="custom-card-total-ratings">( <%= product.product_total_ratings %> )</span>
+                    </div>
+                  </div>
+          </a>
+          <% }); %>
+      </div>
+    </div>
+
+
+
+    <!-- Brands -->
+
+    <div class="container" style="background-color: white; border-radius:10px">
+      <h3 class="px-3 py-1">Top Brands</h3>
+      <div class="brands-card my-2 mx-1 p-2" style="height: auto; display: flex; align-items: center; flex-wrap: wrap;">
+        <a href="/brands?brand_name=samsung"
+          class="brand-card d-flex flex-column align-items-center mx-2 my-1 border border-0">
+          <img src="../public/brands/samsung.jpeg" style="border-radius: 100px; height: 80px;" class="mb-2" alt="">
+          <h3 class="p-3">Samsung</h3>
+        </a>
+        <a href="/brands?brand_name=apple"
+          class="brand-card d-flex flex-column align-items-center mx-2 my-1 border border-0">
+          <img src="../public/brands/apple.jpeg" style="border-radius: 100px; height: 80px;" class="mb-2" alt="">
+          <h3 class="p-3">Apple</h3>
+        </a>
+        <a href="/brands?brand_name=MI"
+          class="brand-card d-flex flex-column align-items-center mx-2 my-1 border border-0">
+          <img src="../public/brands/MI.jpeg" style="border-radius: 100px; height: 80px;" class="mb-2" alt="">
+          <h3 class="p-3">Xiaomi</h3>
+        </a>
+        <a href="/brands?brand_name=boat"
+          class="brand-card d-flex flex-column align-items-center mx-2 my-1 border border-0">
+          <img src="../public/brands/boat.jpeg" style="border-radius: 100px; height: 80px;" class="mb-2" alt="">
+          <h3 class="p-3">Boat</h3>
+        </a>
+        <a href="/brands?brand_name=Dell"
+          class="brand-card d-flex flex-column align-items-center mx-2 my-1 border border-0">
+          <img src="../public/brands/Dell.png" style="border-radius: 100px; height: 80px;" class="mb-2" alt="">
+          <h3 class="p-3">Dell</h3>
+        </a>
+        <a href="/brands?brand_name=HP"
+          class="brand-card d-flex flex-column align-items-center mx-2 my-1 border border-0">
+          <img src="../public/brands/HP.jpeg" style="border-radius: 100px; height: 80px;" class="mb-2" alt="">
+          <h3 class="p-3">HP</h3>
+        </a>
+      </div>
+    </div>
+
+
+    <!-- category -->
+    <!-- Categories Section -->
+    <div class="container my-3 py-2" style="background-color: white; border-radius:10px">
+      <div class="d-flex justify-content-between">
+        <h3>Categories</h3>
+      </div>
+      <div class="custom-card-container">
+        <!-- Category 1 -->
+        <a href="/category?category_name=smart phones" class="custom-card">
+          <img src="../public/category/phone.jpeg" style="background-color:transparent;" alt="Category 1">
+          <div class="custom-card-content">
+            <h2 class="custom-card-title">Smart Phones</h2>
+          </div>
+        </a>
+        <!-- Category 2 -->
+        <a href="/category?category_name=smart watch" class="custom-card">
+          <img src="../public/category/smart watch.jpeg" alt="Category 2">
+          <div class="custom-card-content">
+            <h2 class="custom-card-title">Smart Watch</h2>
+          </div>
+        </a>
+        <!-- Category 3 -->
+        <a href="/category?category_name=laptop" class="custom-card">
+          <img src="../public/category/laptop.jpeg" alt="Category 3">
+          <div class="custom-card-content">
+            <h2 class="custom-card-title">Laptop</h2>
+          </div>
+        </a>
+        <!-- Category 4 -->
+        <a href="/category?category_name=speaker" class="custom-card">
+          <img src="../public/category/speaker.jpeg" alt="Category 4">
+          <div class="custom-card-content">
+            <h2 class="custom-card-title">Speaker</h2>
+          </div>
+        </a>
+      </div>
+    </div>
+
+
+  </main>
+
+
+
+
+
+
+
+  <footer class="bg-dark text-light mt-5">
+    <div class="container">
+      <footer class="py-5">
+        <div class="row">
+
+          <div class="col-6 col-md-2 mb-3">
+            <h5>Brands</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Samsung" class="nav-link p-0 text-light">Samsung</a></li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Apple" class="nav-link p-0 text-light">Apple</a></li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Mi" class="nav-link p-0 text-light">Mi</a></li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Noise" class="nav-link p-0 text-light">Noise</a></li>
+              <li class="nav-item mb-2"><a href="/brands?brand_name=Canon" class="nav-link p-0 text-light">Canon</a></li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-2 mb-3">
+            <h5>category</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="/category?category_name=Smart Phones" class="nav-link p-0 text-light">Smart Phones</a></li>
+              <li class="nav-item mb-2"><a href="/category?category_name=Smart Watch" class="nav-link p-0 text-light">Smart Watch</a></li>
+              <li class="nav-item mb-2"><a href="/category?category_name=Laptop" class="nav-link p-0 text-light">Laptop</a></li>
+              <li class="nav-item mb-2"><a href="/category?category_name=Speaker" class="nav-link p-0 text-light">Speaker</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-5 offset-md-1 mb-3">
+            <form>
+              <h5>Subscribe to our newsletter</h5>
+              <p>Monthly digest of what's new and exciting from us.</p>
+              <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                <label for="newsletter1" class="visually-hidden">Email address</label>
+                <input id="newsletter1" type="text" class="form-control" placeholder="Email address"
+                  fdprocessedid="kbw06p">
+                <button class="btn btn-primary" type="button" fdprocessedid="ujewsd">Subscribe</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+          <p>© 2024 Company, Inc. All rights reserved.</p>
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3"><a class="link-light" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#twitter"></use>
+                </svg></a></li>
+            <li class="ms-3"><a class="link-light" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#instagram"></use>
+                </svg></a></li>
+            <li class="ms-3"><a class="link-light" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#facebook"></use>
+                </svg></a></li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+  </footer>
+
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DigitalMart",
+        "url": "https://www.digitalmart.com/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.digitalmart.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('loginForm');
+      const alertContainer = document.getElementById('alertContainer');
+      const alertMessage = document.getElementById('alertMessage');
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const buyerEmail = document.getElementById('buyer_email').value;
+        const buyerPassword = document.getElementById('buyer_password').value;
+
+        // Create an object to hold form data
+        const formData = {
+          buyer_email: buyerEmail,
+          buyer_password: buyerPassword
+        };
+
+        // Convert form data to URL-encoded format
+        const urlEncodedData = new URLSearchParams(formData).toString();
+
+        // Make an API call to submit form data
+        fetch('/api/buyer_login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: urlEncodedData
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              showAlert(data.error, 'danger');
+            } else {
+              console.log('coming')
+              window.location.href = '/';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showAlert('An error occurred. Please try again.', 'danger');
+          });
+      });
+
+      function showAlert(message, type) {
+        alertMessage.textContent = message;
+        console.log(type);
+
+        // Remove both alert classes first
+        alertContainer.classList.remove('alert-danger', 'alert-success');
+
+        // Set the alert type based on the parameter
+        if (type === 'success') {
+          alertContainer.classList.add('alert-success');
+          console.log('alert successfully');
+        } else {
+          alertContainer.classList.add('alert-danger');
+          console.log('alert not successfully');
+        }
+
+        // Use jQuery to slideDown the alert
+        $(alertContainer).slideDown();
+
+        // Slide up the alert after 2 seconds
+        setTimeout(() => {
+          $(alertContainer).slideUp();
+        }, 2000);
+      }
+
+    });
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('sellerForm');
+      const alertContainer2 = document.getElementById('alertContainer2');
+      const alertMessage2 = document.getElementById('alertMessage2');
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const sellerEmail = document.getElementById('seller_email').value;
+        const sellerPassword = document.getElementById('seller_password').value;
+
+        // Create an object to hold form data
+        const formData = {
+          seller_email: sellerEmail,
+          seller_password: sellerPassword
+        };
+
+        // Convert form data to URL-encoded format
+        const urlEncodedData = new URLSearchParams(formData).toString();
+
+        // Make an API call to submit form data
+        fetch('/api/seller_login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: urlEncodedData
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              showAlert2(data.error, 'danger');
+            } else {
+              window.location.href = '/';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showAlert('An error occurred. Please try again.', 'danger');
+          });
+      });
+
+      function showAlert2(message, type) {
+        alertMessage2.textContent = message;
+        console.log(type);
+
+        // Remove both alert classes first
+        alertContainer2.classList.remove('alert-danger', 'alert-success');
+
+        // Set the alert type based on the parameter
+        if (type === 'success') {
+          alertContainer2.classList.add('alert-success');
+          console.log('alert successfully');
+        } else {
+          alertContainer2.classList.add('alert-danger');
+          console.log('alert not successfully');
+        }
+
+        // Use jQuery to slideDown the alert
+        $(alertContainer2).slideDown();
+
+        // Slide up the alert after 2 seconds
+        setTimeout(() => {
+          $(alertContainer2).slideUp();
+        }, 2000);
+      }
+    });
+  </script>
+
+
+</body>
+
+</html>

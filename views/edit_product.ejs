@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/" style="font-weight: 500;">DigitalMart</a>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="mb-4">Edit Product</h1>
+        <form method="post" action="/update/<%= result.product_id%>" id="updateForm" enctype="multipart/form-data">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="brand_name" class="form-label">Brand Name</label>
+                    <input type="text" class="form-control" id="brand_name" name="brand_name"
+                        value="<%= result.brand_name %>" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="category_name" class="form-label">Category Name</label>
+                    <input type="text" class="form-control" id="category_name" value="<%= result.category_name %>"
+                        name="category_name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_name" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="product_name" value="<%= result.product_name %>"
+                        name="product_name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_price" class="form-label">Product Price</label>
+                    <input type="number" class="form-control" id="product_price" value="<%= result.product_price %>"
+                        name="product_price" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_discount" class="form-label">Product Discount</label>
+                    <input type="number" class="form-control" id="product_discount"
+                        value="<%= result.product_discount %>" name="product_discount" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_details" class="form-label">Product Details</label>
+                    <textarea class="form-control" id="product_details" value="<%= result.product_details %>"
+                        name="product_details" rows="3" required><%= result.product_details %></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_stock" class="form-label">Product Stock</label>
+                    <input type="number" class="form-control" id="product_stock" value="<%= result.product_stock %>"
+                        name="product_stock" required>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <label for="is_visible" class="form-label">Product Visibility</label>
+                    <label class="switch" name="visibility">
+                        <input type="checkbox" value="true" name="visibility" <% if (result.visibility==1) { %> checked
+                        <% } %>>
+                            <span class="slider round"></span>
+                    </label>
+
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary mt-3" data-product-id="<%= result.product_id %>" id="updateButton">UPDATE</button>
+        </form>
+    </div>
+
+
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateButton = document.getElementById('updateButton');
+            const updateForm = document.getElementById('updateForm');
+
+            updateButton.addEventListener('click', async () => {
+                const productId = this.getAttribute('data-product-id');
+                try {
+                    const formData = new FormData(updateForm);
+                    const response = await fetch(`/update/${productId}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    alert(data.message); // Display success message
+                    window.location.href = '/'; // Redirect to homepage
+                } catch (error) {
+                    alert('Error updating product:', error);
+                    // Handle error as needed
+                }
+            });
+        });
+    </script> -->
+
+
+</body>
+
+</html>
